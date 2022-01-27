@@ -3,6 +3,7 @@ import sys
 from PySide6.QtWidgets import QApplication, QWidget, QLabel, \
 QVBoxLayout, QGridLayout, QPushButton
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 
 
 math_string = ''
@@ -22,8 +23,11 @@ class MainWindow(QWidget):
         self.main_layout = QVBoxLayout()
         self.main_layout.setAlignment(Qt.AlignCenter)
 
+        self.main_ind = Indicator("Hello")
         self.num_grid = NumGrid()
+
  
+        self.main_layout.addWidget(self.main_ind)
         self.main_layout.addWidget(self.num_grid)
         self.setLayout(self.main_layout)
 
@@ -78,7 +82,19 @@ class NumGrid(QWidget):
 
         self.setLayout(self.num_grid)
 
-
+class Indicator(QWidget):
+    def __init__(self, text, parent=None):
+        super(Indicator, self).__init__(parent)
+        self.label = QLabel()
+        self.label.setText(text)
+        self.label.setFixedWidth(340)
+        self.label.setFont(QFont('Roboto', 20))
+        self.label.setAlignment(Qt.AlignRight)
+        self.label.setStyleSheet('border: 4px solid grey;')
+        self.column_layout = QVBoxLayout()
+        self.column_layout.setAlignment(Qt.AlignCenter)
+        self.column_layout.addWidget(self.label)
+        self.setLayout(self.column_layout)
 
 
 
