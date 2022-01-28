@@ -8,29 +8,22 @@ from PySide6.QtGui import QFont
 
 math_string = ''
 
-def do_things(txt):
-    global math_string
-    math_string += txt
-    print(math_string)
-
 
 class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Calculator")
-        self.setFixedSize(400, 600)
+        self.setFixedSize(400, 400)
         self.main_layout = QVBoxLayout()
         self.main_layout.setAlignment(Qt.AlignCenter)
 
-        self.main_ind = Indicator("Hello")
         self.num_grid = NumGrid()
 
  
-        self.main_layout.addWidget(self.main_ind)
+        self.main_layout.addWidget(main_ind)
         self.main_layout.addWidget(self.num_grid)
         self.setLayout(self.main_layout)
-
 
 class StdButton(QWidget):
     def __init__(self, text, parent=None):
@@ -41,7 +34,7 @@ class StdButton(QWidget):
         self.column_layout = QVBoxLayout()
         self.column_layout.addWidget(self.button)
         self.setLayout(self.column_layout)
-        self.button.clicked.connect(lambda: do_things(self.button.text()))
+        self.button.clicked.connect(lambda: handle_click(self.button.text()))
 
 class NumGrid(QWidget):
     def __init__(self, parent=None):
@@ -96,11 +89,57 @@ class Indicator(QWidget):
         self.column_layout.addWidget(self.label)
         self.setLayout(self.column_layout)
 
-
-
 app = QApplication(sys.argv)
+main_ind = Indicator("Hello")
+
+
+def do_math(arg1, arg2, op):
+    if(op == '÷'):
+        return float(arg1) / float(arg2)
+    if(op == 'x'):
+        return float(arg1) * float(arg2)
+    if(op == '-'):
+        return float(arg1) - float(arg2)
+    if(op == '+'):
+        return float(arg1) + float(arg2)                
+
+def get_op():
+    return ''.join([i for i in math_string if not i.isdigit()]).replace('.', '') 
+
+def handle_click(txt):
+    global math_string
+
+
+    if(txt == 'C'):
+        math_string = ''
+        main_ind.label.setText(math_string)
+        return
+    if(txt == '='):
+        op = get_op()
+        args = math_string.split(op)
+        math_string = str(do_math(args[0], args[1], op))
+        main_ind.label.setText(math_string)
+        args = None
+        return
+    if(txt == '÷' or txt == 'x' or txt == '-' or txt == '+'): 
+       op = get_op()
+
+       if op == '':
+            math_string += txt                       
+            main_ind.label.setText(math_string)
+            return
+       else:
+           args = math_string.split(op)
+           math_string = str(do_math(args[0], args[1], op))
+           main_ind.label.setText(math_string)
+        #    op = None
+           return
+
+    math_string += txt
+    main_ind.label.setText(math_string)
 
 window = MainWindow()
+
 window.show() 
 
 app.exec()
