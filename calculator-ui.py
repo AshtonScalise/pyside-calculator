@@ -132,7 +132,6 @@ def handle_click(txt):
            args = math_string.split(op)
            math_string = str(do_math(args[0], args[1], op))
            main_ind.label.setText(math_string)
-        #    op = None
            return
 
     math_string += txt
